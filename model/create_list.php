@@ -17,9 +17,9 @@
         if(mysqli_query($link, $sql)){
             $_SESSION['msg'] = "Lista criada";            
             mysqli_close($link);
-            header('Location: http://localhost/projetos/todo/insert_name_list.php');
+            header('Location: ../insert_name_list.php');
         } else {
             $_SESSION['msg'] = "Erro ao criar lista";
             mysqli_close($link);
-            header('Location: http://localhost/projetos/todo/index.php');
+            header('Location: ../index.php');
         }
