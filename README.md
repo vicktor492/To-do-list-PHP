@@ -9,7 +9,7 @@ Objetivo-> Praticar o uso da linguagem, trabalhar a criação de um "CRUD"
 
 #utilização da To do List
 
-1º Salvar os arquivos em htdocs (XAMPP) ou www (WAMP)
+1º Salvar os arquivos em htdocs/projetos/todo (XAMPP) ou www/projetos/todo (WAMP)
 2º criar um banco de dados (Com o nome que você quiser - utilizei todo_list)
 3º Configurar o "db_connect" com o nome do banco de dados que você criou (Se criou com o nome todo_list não precisa mexar
 4º habilitar o server do Apache e do MySQL
