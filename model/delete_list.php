@@ -13,9 +13,9 @@
         $sql_task = "DROP TABLE new_task";
         mysqli_query($link, $sql_task);
         mysqli_close($link);
-        header('Location: http://localhost/projetos/todo/index.php');
+        header('Location: ../index.php');
     } else {
         $_SESSION['msg'] = "Erro ao apagar lista";
         mysqli_close($link);
-        header('Location: http://localhost/projetos/todo/lists.php');
+        header('Location: ../lists.php');
     }
