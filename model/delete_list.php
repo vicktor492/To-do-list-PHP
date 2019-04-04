@@ -1,21 +1,25 @@
 <?php
     session_start();
 
-    require_once "db_connect.php";
+    require_once "../config/db_connect.php";
 
-    $connect = new Conexao();
+    $connect = new Conexion();
     $link = $connect->db_connect();
 
-    $sql_list = "DROP TABLE new_todo";
+    $id_todo = mysqli_escape_string($link, $_POST['delete_todo']);
 
-    if(mysqli_query($link, $sql_list)){
-        $_SESSION['msg'] = "Lista foi apagada";        
-        $sql_task = "DROP TABLE new_task";
-        mysqli_query($link, $sql_task);
+    $sql_todo = "DELETE FROM todo WHERE id = ".$id_todo.";";
+    
+    mysqli_query($link, $sql_todo);
+    
+    $sql_task = "DELETE FROM task WHERE id_todo = ".$id_todo.";";
+  
+    if(mysqli_query($link, $sql_task)){
+        $_SESSION['msg'] = "Lista foi apagada";
         mysqli_close($link);
         header('Location: ../index.php');
     } else {
         $_SESSION['msg'] = "Erro ao apagar lista";
         mysqli_close($link);
-        header('Location: ../lists.php');
+        header('Location: ../lists.php?id_todo='.$id_todo);
     }

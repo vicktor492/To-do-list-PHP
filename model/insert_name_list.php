@@ -1,29 +1,32 @@
 <?php
 
-	require_once "db_connect.php";
+    require_once "../config/db_connect.php";
+    require_once "data.todo.php";
 
     session_start();
 
-	$connect = new Conexao();
+    $data = new DataTodo();
+	$connect = new Conexion();
     $link = $connect->db_connect();
 
-    $name_list = mysqli_escape_string($link, $_POST['name_list']);
-    $desc_list = mysqli_escape_string($link, $_POST['desc_list']);
+    $data->setName(mysqli_escape_string($link, $_POST['name_list']));
+    $data->setDesc(mysqli_escape_string($link, $_POST['desc_list']));
 
-    $sql_insert = "INSERT INTO new_todo(name_list, desc_list) VALUE('$name_list', '$desc_list')";
+    $name = $data->getName();
+    $description = $data->getDesc();
 
-    if(mysqli_query($link, $sql_insert)){
-        $_SESSION['msg'] = "Nome e descrição foram incluidos";
-        $sql_create = "CREATE TABLE new_task(
-            id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
-            name_task VARCHAR(50) NOT NULL,
-            status_task VARCHAR(50) NOT NULL
-            )";
-        mysqli_query($link, $sql_create);
-    	mysqli_close($link);
-    	header("Location: ../lists.php");
+    $sql = "
+        INSERT INTO todo(name_todo, desc_todo)
+        VALUES('".$name."', '".$description."');
+    ";    
+
+    if(mysqli_query($link, $sql)){
+        $_SESSION['msg'] = "Lista criada com sucesso";         
+        mysqli_close($link);
+        header("Location: ../lists.php?name_todo=$name");
     } else {
-    	$_SESSION['msg'] = "Erro ao incluir nome e descrição";
-    	mysqli_close($link);
-    	header("Location: ../insert_name_list.php");
+        $_SESSION['msg'] = "Erro ao criar lista";
+        mysqli_close($link);
+        header("Location: ../index.php");
     }
+
