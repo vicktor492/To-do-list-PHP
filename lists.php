@@ -2,10 +2,25 @@
 
     include_once "msg_cadastro.php";
 
-    include_once "model/db_connect.php";
+    include_once "config/db_connect.php";
 
-    $connect = new Conexao();
+    $connect = new Conexion();
     $link = $connect->db_connect();
+
+    if(isset($_GET['id_todo'])){
+        $_SESSION['id_todo'] = $_GET['id_todo'];
+        $sql_s = "SELECT * FROM todo WHERE id = ".$_SESSION['id_todo'].";";
+        $todo_result = mysqli_query($link, $sql_s);
+        $dados_todo = mysqli_fetch_array($todo_result);
+    }
+
+    if(isset($_GET['name_todo'])){
+        $name_todo = $_GET['name_todo'];
+        $sql_s = "SELECT * FROM todo WHERE name_todo = '".$name_todo."';";
+        $todo_result = mysqli_query($link, $sql_s);
+        $dados_todo = mysqli_fetch_array($todo_result);
+        $_SESSION['id_todo'] = $dados_todo['id'];
+    }    
 
 ?>
 
@@ -31,34 +46,27 @@
 </head>
 <body>
     
-    <?php 
-        $sql_select_list = "SELECT name_list, desc_list FROM new_todo";
-        $result_list = mysqli_query($link, $sql_select_list);
-        while($dados_list = mysqli_fetch_array($result_list)){
-            $name_list = $dados_list['name_list'];
-            $desc_list = $dados_list['desc_list'];
-        }
-    ?>
+
     <nav>
         <div class="nav-wrapper">
             <a href="#" class="brand-logo center">
                 <i class='medium material-icons'>format_list_bulleted</i> 
-            To do list - <?= $name_list ?></a>        
+            To do list</a>        
         </div>
     </nav>    
 
     <div class="container">
         <div class="row">
-        <h3 class="light"><?= $name_list ?></h3>
-        <h6 class="light"><?= $desc_list ?></h6>        
+        <h3 class="light"><?=$dados_todo['name_todo']?></h3>
+        <h6 class="light"><?=$dados_todo['desc_todo']?></h6>        
             <table class="striped">
                 <thead>
                     <th>Nome</th>
                     <th>Status</th>                    
                 </thead>
                 <tbody> 
-                    <?php 
-                        $sql_select = "SELECT * FROM new_task";
+                    <?php                        
+                        $sql_select = "SELECT * FROM task WHERE id_todo =".$_SESSION['id_todo'].";";
                         $result = mysqli_query($link, $sql_select);
 
                         if(mysqli_num_rows($result) > 0){
@@ -68,8 +76,8 @@
                             <tr>
                                 <td><?= $dados['name_task']?></td>
                                 <td><?= $dados['status_task'] ? 'Tarefa concluida':'Em andamento'?></td>
-                                <td><a href="edit.php?id=<?= $dados['id']?>" class="btn-floating orange"><i class="material-icons">create</i></a></td>
-                                <td><a href="model/done.php?id=<?= $dados['id']?>" class="btn-floating green"><i class="material-icons">check</i></a></td>
+                                <td><a href="edit.php?id=<?= $dados['id']?>&id_todo=<?=$_SESSION['id_todo']?>" class="btn-floating orange"><i class="material-icons">create</i></a></td>
+                                <td><a href="model/done.php?id=<?= $dados['id']?>&id_todo=<?=$_SESSION['id_todo']?>" class="btn-floating green"><i class="material-icons">check</i></a></td>
                                 <td>
                                     <button type="button" class="btn-floating red" data-toggle="modal" data-target="#modal<?=$dados['id']?>">
                                         <i class="material-icons">delete</i>
@@ -89,6 +97,7 @@
                                             <div class="modal-footer">
                                                 <form action="model/delete.php" method="POST">
                                                     <input type="hidden" name="delete" value="<?=$dados['id']?>">
+                                                    <input type="hidden" name="id_todo" value="<?=$_SESSION['id_todo']?>">
                                                     <button type="button" class="waves-effect waves-light btn modal-trigger" data-dismiss="modal">Cancelar</button>
                                                     <button type="submit" class="waves-effect waves-light btn red modal-trigger">Sim, tenho certeza!</button>
                                                 </form>
@@ -147,8 +156,17 @@
                 </tbody>
                 
             </table>
-            <a href="add.php" class="btn">Adicionar nova tarefa</a>
-            <a href="model/delete_list.php" class="btn red">Apagar Lista</a>
+            <form action="add.php" method="get">
+                <input type="hidden" name="id_todo" value="<?=$_SESSION['id_todo']?>"/>
+                <button type="submit" class="btn">Adicionar nova tarefa</button>
+            </form>
+            <br/>
+            <form action="model/delete_list.php" method="post">
+                <input type="hidden" name="delete_todo" value="<?=$_SESSION['id_todo']?>"/>
+                <button type="submit" class="btn red">Apagar lista</button>                
+            </form>
+            <br/>
+            <a href="index.php" class="btn orange">Sair da Lista</a>
         </div>
     </div>
     

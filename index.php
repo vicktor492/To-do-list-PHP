@@ -1,5 +1,9 @@
 <?php 
     include_once "msg_cadastro.php";
+
+    require_once "config/db_connect.php";
+    $connect = new Conexion();
+    $link = $connect->db_connect();
 ?>
 
 <!DOCTYPE html>
@@ -15,6 +19,7 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    
 
     <style>
         .modal{
@@ -38,9 +43,46 @@
 
             <h5>Para iniciar crie uma nova lista</h5>
 
-            <form action="model/create_list.php" method="post">                
-                <button type="submit" class="btn">Criar novo To do List</button>
+            <form action="insert_name_list.php" method="post">                
+               <button type="submit" class="btn">Criar novo To do List</button>
             </form>
+                     
+        </div> 
+
+        <h6>Ou</h6>       
+
+        <!-- Button Trigger Modal -->
+        <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Continuar com uma lista existente</a>
+        
+        <!-- Modal Structure -->
+        <div id="modal1" class="modal modal-fixed-footer">
+        <div class="modal-content">
+            <h4>Selecione uma lista para continuar</h4>
+            <?php 
+                $sql = "SELECT * FROM todo";
+                $result = mysqli_query($link, $sql);
+                if(mysqli_num_rows($result) > 0){
+                    while($dados = mysqli_fetch_array($result)){
+
+                    
+            ?>
+                        <form action="lists.php" method="get">
+                            <input type="text" class="hide" name="id_todo" value="<?= $dados['id'] ?>" />
+                            <br/>
+                            <button type="submit" class="btn"><?= $dados['name_todo'] ?></button>
+                        </form>
+            <?php
+                    }
+                } else {
+            ?>
+                    <h6>Desculpe! Mas parece que ainda não tem nenhuma lista criada</h6>
+            <?php                    
+                }
+            ?>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="modal-close waves-effect waves-green btn-flat">Cancelar</button>
+        </div>
         </div>
     </div>
     

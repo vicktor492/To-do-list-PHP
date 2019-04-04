@@ -1,3 +1,11 @@
+<?php 
+    session_start();
+
+    if(isset($_SESSION['id_todo'])){
+        $id_todo = $_SESSION['id_todo'];
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -25,14 +33,19 @@
     <div class="container">
         <div class="row">
             <h3 class="light">Nova Tarefa</h3>
-            <form action="model/create.php" method="POST">
+            <form action="model/create_task.php" method="POST">
                 <div class="input-field col s12">
-                    <input type="text" class="input-field" name="nome" id="nome" required/>
+                    <input type="hidden" name="id_todo" value="<?=$id_todo?>">
+                    <input type="text" class="input-field" name="name" id="nome" required/>
                     <label for="nome">Digite o nome da tarefa</label>
                 </div>                            
-                <button type="submit" id="btn" class="btn" name="btn-add">Adicionar tarefa</button>
-                <a href="lists.php" class="btn green" name="btn-list">Cancelar</a>                
-            </form>             
+                <button type="submit" id="btn" class="btn" name="btn-add">Adicionar tarefa</button>                
+            </form>
+            <br/>
+            <form action="lists.php" method="get">
+                <input type="hidden" name="id_todo" value="<?=$id_todo?>">
+                <button type="submit" class="btn red">Cancelar</button>
+            </form>
         </div>
     </div>    
     

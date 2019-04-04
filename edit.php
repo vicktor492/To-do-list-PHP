@@ -2,8 +2,7 @@
 session_start();
 
 $id = $_GET['id'];
-
-$_SESSION['id'] = $id;
+$id_todo = $_GET['id_todo'];
 
 ?>
 <!DOCTYPE html>
@@ -35,11 +34,13 @@ $_SESSION['id'] = $id;
             <h3 class="light">Editar Cliente</h3>
             <form action="model/update.php" method="POST">
                 <div class="input-field col s12">
+                    <input type="hidden" name="id" value="<?=$id?>">
+                    <input type="hidden" name="id_todo" value="<?=$id_todo?>">
                     <input type="text" class="input-field" name="nome" id="nome" />
                     <label for="nome">nome</label>
                 </div>                           
                 <button type="submit" id="btn" class="btn" name="btn-add">Editar</button>                
-                <a href="lists.php" class="btn orange">Cancelar</a>
+                <a href="lists.php" class="btn red">Cancelar</a>
             </form>             
         </div>
     </div>    
